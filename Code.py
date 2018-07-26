@@ -79,7 +79,6 @@ state_size = 8
 
 path = "./" + gymName + "-checkpoint/"
 
-training_episodes = 4000
 max_steps_per_episode = 5000
 episode_batch_size = 5
 
@@ -133,7 +132,8 @@ if trainNetwork:
         for index, gradient in enumerate(gradient_buffer):
             gradient_buffer[index] = gradient * 0
 
-        for episode in range(training_episodes):
+        episode = 0
+        while True:
             state = env.reset()
 
             episode_history = []
@@ -176,9 +176,10 @@ if trainNetwork:
                 for index, gradient in enumerate(gradient_buffer):
                     gradient_buffer[index] = gradient * 0
             print("Episode: " + str(episode))
-            if episode % 100 == 0:
+            if episode % 10 == 0:
                 saver.save(sess, path + "pg-checkpoint", episode)
                 print("Average reward / 100 eps: " + str(np.mean(total_episode_rewards[-100:])))
+            episode += 1
 
 if testNetwork:
     testing_episodes = 5
