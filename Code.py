@@ -15,8 +15,8 @@ gymName = "LunarLanderPatched-v2"
 
 env = gym.make(gymName)
 
-print(env.observation_space)
-print(env.action_space)
+print(env.observation_space.shape[0])
+print(env.action_space.n)
 
 discount_rate = 0.95
 
@@ -74,8 +74,8 @@ class Agent:
 tf.reset_default_graph()
 
 # Modify these to match shape of actions and states in your environment
-num_actions = 4
-state_size = 8
+num_actions = env.action_space.n
+state_size = env.observation_space.shape[0]
 
 path = "./" + gymName + "-checkpoint/"
 
@@ -175,10 +175,9 @@ if trainNetwork:
 
                 for index, gradient in enumerate(gradient_buffer):
                     gradient_buffer[index] = gradient * 0
-            print("Episode: " + str(episode))
             if episode % 10 == 0:
                 saver.save(sess, path + "pg-checkpoint", episode)
-                print("Average reward / 100 eps: " + str(np.mean(total_episode_rewards[-100:])))
+                print("Average reward / 10 eps: " + str(np.mean(total_episode_rewards[-100:])))
             episode += 1
 
 if testNetwork:
